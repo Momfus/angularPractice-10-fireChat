@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ChatService } from '../../providers/chat.service';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 
 @Component({
@@ -7,20 +8,34 @@ import { ChatService } from '../../providers/chat.service';
   templateUrl: './chat.component.html',
   styles: []
 })
-export class ChatComponent {
+export class ChatComponent implements OnInit {
 
   // tslint:disable: no-inferrable-types
+  // tslint:disable: max-line-length
+
   mensaje: string = '';
+  elemento: any;
 
   constructor( public _cs: ChatService ) {
 
     this._cs.cargarMensajes()
-            .subscribe( (mensajes: any[]) => {
+            .subscribe( () => {
 
-              console.log( mensajes );
+
+              setTimeout( () => { // Lo de abajo lo hace mucho más rápido que cuando se renderiza el html, por lo que se hace ese leve atraso para ejecutarse
+
+                this.elemento.scrollTop = this.elemento.scrollHeight; // Mover el scroll hacia abajo
+
+              }, 20);
 
 
             });
+
+  }
+
+  ngOnInit() {
+
+    this.elemento = document.getElementById( 'app-mensajes' );
 
   }
 
@@ -28,7 +43,17 @@ export class ChatComponent {
 
     console.log(this.mensaje);
 
+    // Ignorar si el mensaje está vacio
+    if ( this.mensaje.length === 0 ) {
+      return;
+    }
 
-  }
+    // Agregar mensaje
+    this._cs.agregarMensaje( this.mensaje )
+            .then( () => this.mensaje = '' )
+            .catch( (err) => console.error('Error al enviar', err ) );
+
+
+          }
 
 }
