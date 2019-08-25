@@ -7,11 +7,11 @@ export const environment = {
 
   // Para el uso de firebase
   firebase: {
-    piKey: 'AIzaSyC4HDVW81UnVnGg6gweSmW2gZ6nxQVHL-Y',
+    apiKey: 'AIzaSyC4HDVW81UnVnGg6gweSmW2gZ6nxQVHL-Y',
     authDomain: 'firechat-b49a6.firebaseapp.com',
     databaseURL: 'https://firechat-b49a6.firebaseio.com',
     projectId: 'firechat-b49a6',
-    storageBucket: '',
+    storageBucket: 'firechat-b49a6.appspot.com',
     messagingSenderId: '549676857323',
     appId: '1:549676857323:web:c1c8f9fe82d87e67'
   }

@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ChatService } from '../../providers/chat.service';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 
 @Component({

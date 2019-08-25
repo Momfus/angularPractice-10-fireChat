@@ -4,6 +4,8 @@ import { map } from 'rxjs/operators';
 
 import { Mensaje } from '../interface/mensaje.interface';
 
+import { AngularFireAuth } from '@angular/fire/auth';
+import { auth } from 'firebase/app';
 
 @Injectable()
 export class ChatService {
@@ -11,9 +13,41 @@ export class ChatService {
   private itemsCollection: AngularFirestoreCollection<Mensaje>;
 
   public chats: Mensaje[] = [];
+  public usuario: any = {};
 
-  constructor( private afs: AngularFirestore ) {
+  constructor(  private afs: AngularFirestore,
+                public afAuth: AngularFireAuth ) {
 
+      this.afAuth.authState.subscribe( user => {
+
+                              console.log( 'Estado del usuario: ', user );
+
+                              if ( !user ) { return; } // No hay un usuario, se sale
+
+                              this.usuario.nombre = user.displayName;
+                              this.usuario.uid = user.uid;
+
+                            });
+
+  }
+
+  login( proveedor: string ) {
+
+    if ( proveedor === 'google' ) {
+
+      this.afAuth.auth.signInWithPopup(new auth.GoogleAuthProvider());
+
+    } else {
+
+      this.afAuth.auth.signInWithPopup(new auth.TwitterAuthProvider());
+
+    }
+  }
+
+  logout() {
+    this.usuario = {};
+
+    this.afAuth.auth.signOut();
   }
 
   cargarMensajes() {
@@ -46,9 +80,10 @@ export class ChatService {
 
     let mensaje: Mensaje = {
 
-      nombre: 'Demo',
+      nombre: this.usuario.nombre,
       mensaje: texto,
       fecha: new Date().getTime(),
+      uid: this.usuario.uid
 
     };
 
